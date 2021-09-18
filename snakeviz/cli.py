@@ -143,15 +143,15 @@ def main(argv=None):
     print(url)
 
     if not args.server:
-        try:
-            browser = webbrowser.get(args.browser)
-        except webbrowser.Error as e:
-            parser.error('no web browser found: %s' % e)
-
         # Launch the browser in a separate thread to avoid blocking the
         # ioloop from starting
         def bt():
-            browser.open(url, new=2)
+            try:
+                browser = webbrowser.get(args.browser)
+                browser.open(url, new=2)
+            except webbrowser.Error as e:
+                parser.error('web browser error: %s' % e)
+
         threading.Thread(target=bt).start()
 
     try:
